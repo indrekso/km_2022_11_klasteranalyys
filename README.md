@@ -1,1 +1,1 @@
-# km_2022_11_klasteranalyys
+Siin asuvad Kvantitatiivsete meetodite klasteranalüüsi praktikumimaterjalid. Laadige nad tervikuna alla paremal ülal asuva rohelise nupu Code alt, valides Download ZIP ja pakkige oma arvutis zip-fail lahti. Avage lahtipakitud failidest projektifail (laiendiga .Rproj) ja seejärel Rmarkdowni failid (laiendiga .Rmd). Vajalikud andmefailid on kaustas data. 
