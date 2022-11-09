@@ -1,0 +1,93 @@
+---
+title: "Klasteranalüüsi praktikum"
+author: "Indrek Soidla"
+date: "25 3 2022"
+output: 
+  html_document:
+    theme: spacelab
+    highlight: tango
+    fig_cap: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+Laeme kõigepealt alla vajalikud paketid. Tavapraktika on kõigi tööks vajalike pakettide allalaadimine ära teha faili alguses, et hiljem ei tekiks pakettide laadimisega probleeme. Toon siiski ka hiljem koodis konkreetsete funktsioonide kasutamiseks vajaliku paketi laadimise välja, et oleks täpsemalt näha, milliste funktsioonide jaoks millist paketti on vaja.
+
+```{r message = FALSE}
+library(haven)
+library(tidyverse)
+library(descr)
+```
+
+Laeme sisse ESS 8. laine Eesti andmed.
+
+```{r}
+ee8 <- read_spss("data/ee8.sav")
+```
+
+Eraldame alamandmestiku, kus on rahulolu tunnused.
+
+```{r}
+library(dplyr)
+
+stf <- ee8 %>%
+  select(stflife, stfeco, stfgov, stfdem, stfedu, stfhlth)
+```
+
+# Indiviididevaheliste kauguste arvutamine
+
+Harjutame enne klasterdamise juurde minekut indiviididevaheliste kauguste arvutamist, et seda intuitiivselt paremini mõista. Võtame näiteks andmestiku viis esimest indiviidi ja nende väärtused kõigepealt tunnuses `stflife`, mis on andmestikus teine tunnus.
+
+```{r}
+stf[1:5, 1]
+```
+
+Arvutame indiviididevahelised kaugused ainult ühe tunnuse väärtuste põhjal:
+
+```{r}
+dist(stf[1:5, 1])
+```
+
+Kaugused on sirgjoonelised ja seetõttu on kaugus puhtalt ühe indiviidi väärtus tunnuses miinus teise indiviidid väärtus tunnuses.
+
+Vaatame, millised on indiviidide väärtused ka tunnuses `stfeco` (rahulolu majanduse olukorraga).
+
+```{r}
+stf[1:5, 1:2]
+```
+
+Arvutame indiviididevahelised eukleidilised kaugused (kaugused linnulennult) tunnuste `stflife` ja `stfeco` väärtuste põhjal:
+
+```{r}
+dist(stf[1:5, 1:2])
+```
+
+Näeme maatriksist, et esimese ja teise rea indiviidi kaugus on 3,61. See on saadud Pythagorase teoreemi rakendades - kui arvutame selle alloleva lahtikirjutuse põhjal, saame täpselt sama vastuse.
+
+$d = \sqrt{(9-7)^2 + (7-4)^2} = 3.61$
+
+Sama põhimõtte järgi käib kauguste arvutamine ka suurema hulga tunnuste puhul:
+
+```{r}
+stf[1:5, 1:6]
+
+dist(stf[1:5, 1:6])
+```
+
+Esimese ja teise indiviidi vahelise eukleidilise kauguse arvutustehe kuue tunnuse lõikes:
+
+$d = \sqrt{(9-7)^2 + (7-4)^2 + (4-2)^2 + (7-2)^2 + (6-8)^2 + (7-6)^2} = 6.86$
+
+Funktsioon `dist` võimaldab ka teist liiki kauguste arvutamist, nt Manhattani ehk linnakaugust: vt käsku küsimärgiga funktsiooni nimetuse ees: `?dist`
+
+Nt linnakaugused:
+
+```{r}
+stf[1:5, 1:6]
+
+dist(stf[1:5, 1:6], method = "manhattan")
+```
+
+Mille alusel arvutab kaugused `method = "maximum"`?
